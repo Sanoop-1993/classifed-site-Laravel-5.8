@@ -22,3 +22,4 @@ Route::get('/',[UserController::class,'index']);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/usercontroller/fetch', [App\Http\Controllers\UserController::class, 'fetch'])->name('searchlocation.fetch');

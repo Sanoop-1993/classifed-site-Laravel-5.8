@@ -93,6 +93,7 @@
 
            <div class="col-lg-4">
              <form class="form-horizontal row" method="post" action="">
+             @csrf
              <div class="col-8">
              <input class="form-control" type="text" name="searchonproduct" placeholder="Search" aria-label="Search">
 
@@ -114,6 +115,7 @@
 
                 <div class="col-lg-6">
                     <input type="text" name="states" id="state" class="form-control" placeholder="Enter State">
+                    <div id="statelist"></div>
                 </div>
                 <div class="col-lg-4">
 
@@ -156,7 +158,25 @@
         $('#state').keyup(function(){
             var data;
             var indianstates = $(this).val();
-            alert(indianstates);
+            if(indianstates != '')
+            {
+                var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url:"{{route('searchlocation.fetch')}}",
+                    method:"POST",
+                    data:{indianstates:indianstates,_token:_token},
+                    success:function(data){
+                        $('#statelist').fadeIn();
+                        $('#statelist').html(data);
+
+                    }
+                });
+            }else{
+
+                $('#statelist').fadeOut();
+                $('#statelist').html(data);
+
+            }
 
         });
 
