@@ -11,6 +11,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <link href="{{ asset('fontawesome/css/all.css') }}"  rel="stylesheet">
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -20,6 +22,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/custom-css.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
@@ -78,7 +82,7 @@
                         @endguest
 
                         <li class="nav-item">
-                                    <a class="nav-link" href="">Add Post</a>
+                                    <a class="nav-link" href="{{url('post-classified-add')}}">Add Post</a>
                                 </li>
                     </ul>
 
@@ -92,10 +96,10 @@
         <div class="row">
 
            <div class="col-lg-4">
-             <form class="form-horizontal row" method="post" action="">
+             <form class="form-horizontal row" method="post" action="{{url('/product/search')}}">
              @csrf
              <div class="col-8">
-             <input class="form-control" type="text" name="searchonproduct" placeholder="Search" aria-label="Search">
+             <input class="form-control" type="text" name="searchonproduct" placeholder="Enter Product" required="true" aria-label="Search">
 
              </div>
 
@@ -108,18 +112,24 @@
 
             <div class="col-lg-8">
             
-            <form class="form-horizontal row" method="post" action="">
+            <form class="form-horizontal row" method="post" action="{{url('/search/ads')}}">
             @csrf
 
                 <div class="form-group row">
 
                 <div class="col-lg-6">
-                    <input type="text" name="states" id="state" class="form-control" placeholder="Enter State">
-                    <div id="statelist"></div>
+                    <input type="text" name="states" id="state" class="form-control" placeholder="Enter State" required="true">
+                    <div id="statelist"style="border-radius:0px; background:#fff;padding:0px 13px;overflow-y:auto;
+                    width:88%;"></div>
+                    <div id="citylist" style="display: block; position: absolute;
+                    border-radius:0px; background:#fff;padding:0px 13px;overflow-y:auto;
+                    width:88%;"></div>
+                     <input type="text" id="city" name="city" style="border:none" class="bg-dark text-white">
                 </div>
+
                 <div class="col-lg-4">
 
-                <select name="categories" id="categories" class="form-control dropdown">
+                <select name="categories" id="categories" name="categories" class="form-control dropdown">
                 <option value="">Select</option>
                 </select>
                 </div>
@@ -180,7 +190,87 @@
 
         });
 
+        $(document).on('click','#search',function(){
+
+            $('#state').val($(this).text());
+            $('#statelist').fadeOut();
+        });
+
     });
+
+    $(document).on('click','#statelist ul li',function(){
+
+        var state = $('#state').val();
+        var id = $(this).val();
+
+         var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url:"{{route('state.cities')}}",
+                    method:"POST",
+                    data:{id:id,_token:_token},
+                    success:function(data){
+                        $('#citylist').fadeIn();
+                        $('#citylist').html(data);
+                    }
+                });
+
+    });
+
+    $(document).on('click','#citylist',function(e){
+
+        var txt = $(e.target).text();
+
+        $('#city').fadeIn();
+        $('#city').val(txt);
+        $('#citylist').fadeOut();
+
+           
+        });
+
+    $(document).ready(function(){
+        var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url:"{{route('categories.retrieve')}}",
+                    method:"POST",
+                    data:{_token:_token},
+                    success:function(data){
+                        $('#categories').fadeIn();
+                        $('#categories').html(data);
+                    }
+                });
+
+    });
+
+    $(document).ready(function(){
+
+        if(window.location == "http://127.0.0.1:8000/"){
+            var _token = $('input[name="_token"]').val();
+                $.ajax({
+                    url:"{{route('categories.ads')}}",
+                    method:"GET",
+                    data:{_token:_token},
+                    success:function(data){
+                         $('#Advertisement').html(data);
+                    }
+                });
+
+
+        }
+        
+    });
+
+    $(document).ready(function(){
+        $('p img').on('click',function()
+        {
+            $('.main').attr('src',$(this).attr('src'));
+
+        });
+
+
+
+    });
+
+
 
 
 

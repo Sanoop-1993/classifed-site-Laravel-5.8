@@ -1,0 +1,25 @@
+.userpagecategories {
+    padding: 0px;
+    color: brown;
+}
+
+.userpagecategories li a {
+    text-decoration: none;
+}
+
+.userpagecategories li:hover {
+    background: blue;
+}
+
+.userpagecategories li a i {
+    color: black;
+    padding-right: 5px;
+}
+
+.fa-ul {
+    margin-left: 0px;
+}
+
+.fa-ul li:hover {
+    background: #000;
+}
